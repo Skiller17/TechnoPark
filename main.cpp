@@ -65,22 +65,26 @@ public:
         std::string nameInfo;
         std::string title;
         int k = 0;
+        int t = 0;
         std::vector<std::string> vectRU;
         std::vector<std::string> vectNoRU;
+        std::vector<std::string> vectNewRU;
         std::vector<std::string> nameRU;
         std::vector<std::string> name;
         std::string titleNoRU;
-//        nameRU.reserve(8);
-//        name.reserve(8);
+        nameRU.reserve(8);
+        name.reserve(8);
         std::ifstream input_file(f3);
         while (getline(input_file, nameInfo)) {
             for (int i = 0; i < non_adult_mov.size(); i++) {
                 title = non_adult_mov[i];
-                if (nameInfo.find(title, 0) != -1 && (nameInfo.find("RU", 0) != -1 || nameInfo.find("ru", 0) != -1)) {
+                if (nameInfo.find(title, 0) != -1 && (nameInfo.find("RU", 0) != -1 || nameInfo.find("SUHH", 0) != -1)) {
                     vectRU.push_back(title);
                 }
             }
         }
+        std::sort(vectRU.begin(), vectRU.end());
+        vectRU.erase(std::unique(vectRU.begin(), vectRU.end()), vectRU.end());
         for (int i = 0; i < non_adult_mov.size(); i++) {
             for (int j = 0; j < vectRU.size(); j++) {
                 if (non_adult_mov[i] != vectRU[j]) {
@@ -93,11 +97,12 @@ public:
             }
             k = 0;
         }
-
+        input_file.close();
+        input_file.open(f3);
         while (getline(input_file, nameInfo)) {
             for (int i = 0; i < vectRU.size(); i++) {
                 title = vectRU[i];
-                if (nameInfo.find(title, 0) != -1 && (nameInfo.find("RU", 0) != -1 || nameInfo.find("ru", 0) != -1)) {
+                if (nameInfo.find(title, 0) != -1 && (nameInfo.find("RU", 0) != -1 || nameInfo.find("SUHH", 0) != -1)) {
                     nameRU = Split(nameInfo, '\t');
                     std::cout << nameRU[2] << std::endl;
                 }
@@ -111,6 +116,7 @@ public:
                 }
             }
         }
+        input_file.close();
     }
 };
 
