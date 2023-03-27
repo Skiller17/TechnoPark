@@ -38,26 +38,28 @@ public:
                 id_mov[0] = id_mov[0].substr(1,'\n');
             }
         }
+        input_file.close();
     }
 
     void Movies(const std::string &f2)  //Смотрим фильмы не для взрослых этого актёра
     {
-    std::string titlesInfo;
-    std::vector<std::string> movies;
-    std::string title;
-    std::ifstream input_file(f2);
-    while (getline(input_file, titlesInfo)) {
-        for (int i = 0; i < id_mov.size(); i++) {
-            title = id_mov[i];
-            title = title.substr(1,'\n');
-            if (titlesInfo.find("movie", 0) != -1 && titlesInfo.find(title, 0) != -1) {
-                movies = Split(titlesInfo,'\t');
-                if(movies[4]==" 0") {
-                    non_adult_mov.push_back(title);
+        std::string titlesInfo;
+        std::vector<std::string> movies;
+        std::string title;
+        std::ifstream input_file(f2);
+        while (getline(input_file, titlesInfo)) {
+            for (int i = 0; i < id_mov.size(); i++) {
+                title = id_mov[i];
+                title = title.substr(1,'\n');
+                if (titlesInfo.find("movie", 0) != -1 && titlesInfo.find(title, 0) != -1) {
+                    movies = Split(titlesInfo,'\t');
+                    if(movies[4]==" 0") {
+                        non_adult_mov.push_back(title);
+                    }
                 }
             }
         }
-    }
+        input_file.close();
     }
 
     std::string Local(const std::string &f3) //Смотрим есть ли у фильма русскоязычное название
@@ -68,9 +70,10 @@ public:
         int t = 0;
         std::vector<std::string> vectRU;
         std::vector<std::string> vectNoRU;
-        std::vector<std::string> vectNewRU;
         std::vector<std::string> nameRU;
         std::vector<std::string> name;
+        std::vector<std::string> ListOfRU;
+        std::vector<std::string> ListOfNoRU;
         std::string titleNoRU;
         nameRU.reserve(8);
         name.reserve(8);
@@ -104,19 +107,27 @@ public:
                 title = vectRU[i];
                 if (nameInfo.find(title, 0) != -1 && (nameInfo.find("RU", 0) != -1 || nameInfo.find("SUHH", 0) != -1)) {
                     nameRU = Split(nameInfo, '\t');
-                    std::cout << nameRU[2] << std::endl;
+                    ListOfRU.push_back(nameRU[2]);
                 }
 
             }
-            for (int i = 0; i < non_adult_mov.size(); i++) {
-                title = non_adult_mov[i];
+            for (int i = 0; i < vectNoRU.size(); i++) {
+                title = vectNoRU[i];
                 if (nameInfo.find(title, 0) != -1 && nameInfo.find("original", 0) != -1) {
                     name = Split(nameInfo, '\t');
-                    std::cout << name[2] << std::endl;
+                    ListOfNoRU.push_back(name[2]);
                 }
             }
         }
         input_file.close();
+        std::sort(ListOfRU.begin(), ListOfRU.end());
+        ListOfRU.erase(std::unique(ListOfRU.begin(), ListOfRU.end()), ListOfRU.end());
+        for(int i=0; i<ListOfRU.size();i++){
+            std::cout << ListOfRU[i] << std::endl;
+        }
+        for(int i=0; i<ListOfNoRU.size();i++){
+            std::cout << ListOfNoRU[i] << std::endl;
+        }
     }
 };
 
@@ -134,107 +145,3 @@ int main(int argc, char *argv[]){
     solution.Local(argv[4]);
     return 0;
 }
-
-
-////Дальше будут мои размышления насчёт методов
-
-/*int main(int argc, char* argv[]) { //разработка метода Titles
-    std::ifstream f1("name.basics.tsv");
-    std::string stroka;
-    std::vector <std::string> word;
-    std::vector <std::string> titles;
-    std::string actor;
-    actor = "Mark Ayzenberg";
-    while(getline(f1, stroka)) {
-        if(stroka.find(actor, 0)!=-1) {
-            word = Split(stroka,'\t');
-            titles = Split(word[5],',');
-            titles[0] = titles[0].substr(1,'\n');
-            for(int i=0; i < 4; i++){
-                std::cout << titles[i] << std::endl;
-            }
-        }
-    }
-}*/
-/*int main(int argc, char *argv[]) { //разработка метода Movies
-    std::ifstream f2("title.basics.tsv");
-    std::string stroka2;
-    std::vector<std::string> vect = {"tt2860568", "tt0101495", "tt0265499", "tt0000869"};
-    std::vector<std::string> vect3;
-    std::string title;
-    std::vector<std::string> vect2;
-    while (getline(f2, stroka2)) {
-        for (int i = 0; i < vect.size(); i++) {
-            title = vect[i];
-            vect3 = Split(stroka2,'\t');
-            if (stroka2.find("movie", 0) != -1 && stroka2.find(title, 0) != -1) {
-                if(vect3[4]==" 0") {
-                    vect2.push_back(title);
-                }
-            }
-        }
-    }
-
-    for (int i = 0; i < vect2.size(); i++) {
-        std::cout << vect2[i] << std::endl;
-    }
-}*/
-
-/*int main(int argc, char* argv[]) { //разработка метода Local
-    std::string stroka3;
-    std::string title;
-    std::vector<std::string> vect = {"tt2860568", "tt0101495", "tt0265499", "tt0000869"};
-    std::vector<std::string> vectRU;
-    std::vector<std::string> vectNoRU;
-    std::vector<std::string> nameRU;
-    std::vector<std::string> name;
-    std::string titleNoRU;
-    int k = 0;
-    nameRU.reserve(8);
-    name.reserve(8);
-    std::ifstream f3;
-    f3.open("title.akas.tsv");
-    while (getline(f3, stroka3)) {
-        for (int i = 0; i < vect.size(); i++) {
-            title = vect[i];
-            if (stroka3.find(title, 0) != -1 && (stroka3.find("RU", 0) != -1 || stroka3.find("ru", 0) != -1)) {
-                vectRU.push_back(title);
-            }
-        }
-    }
-    for(int i=0;i<vect.size();i++){
-        for(int j=0;j<vectRU.size();j++){
-            if(vect[i]!=vectRU[j]){
-                k++;
-            }
-            if(k==vectRU.size()){
-                vectNoRU.push_back(vect[i]);
-                k = 0;
-            }
-        }
-        k = 0;
-    }
-    for(int i = 0;i<vectNoRU.size();i++) {
-        std::cout << vectNoRU[i] << std::endl;
-    }
-    f3.close();*/
-    /*f3.open("title.akas.tsv");
-    while (getline(f3, stroka3)) {
-        for (int i = 0; i < vectRU.size(); i++) {
-            title = vectRU[i];
-            if (stroka3.find(title, 0) != -1 && (stroka3.find("RU", 0) != -1 || stroka3.find("ru", 0) != -1)) {
-                nameRU = Split(stroka3, '\t');
-                std::cout << nameRU[2] << std::endl;
-            }
-
-        }
-        for (int i = 0; i < vect.size(); i++) {
-            title = vect[i];
-            if (stroka3.find(title, 0) != -1 && stroka3.find("original", 0) != -1) {
-                name = Split(stroka3, '\t');
-                std::cout << name[2] << std::endl;
-            }
-        }
-    }
-    f3.close();
-}*/
