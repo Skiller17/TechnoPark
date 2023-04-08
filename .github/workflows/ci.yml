@@ -42,7 +42,7 @@ jobs:
           style: file
           files-changed-only: false
   build:
-    needs: [ cppcheck, cpplint, cpp-linter ]
+    needs: [ cppcheck-test, cpplint, cpp-linter ]
 
     runs-on: ubuntu-latest
 
