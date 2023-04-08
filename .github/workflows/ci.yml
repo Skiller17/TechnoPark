@@ -55,7 +55,7 @@ jobs:
           style: file
           files-changed-only: false
   build:
-    needs: [ cppcheck-test, cpplint, cpp-linter ]
+    needs: [ cppcheck-test, cpplint, cpp-linter, clang-tidy ]
 
     runs-on: ubuntu-latest
 
@@ -89,8 +89,8 @@ jobs:
         run: /
          ls
          cd ${{ github.workflow }}/tests/unit_tests
-         chmod +x finder_test
-         ./finder_test
+         chmod +x Tests
+         ./Tests
 
       - name: get-stats
         run: lcov -t "tests" -o coverage.info -c -d . && genhtml -o report coverage.info
