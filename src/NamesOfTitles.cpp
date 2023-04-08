@@ -5,13 +5,14 @@
 #include "ActorTitles.h"
 #include "NamesOfTitles.h"
 
-void NamesOfTitles::SearchRuLocalizedTitles(const std::string &file) {//Смотрим есть ли у фильма русскоязычное название
+void NamesOfTitles::SearchRuLocalizedTitles(const std::string &file) {
     std::string localizedTitles;
     std::string title;
     std::vector<std::string> ruLocalizedTitles{};
     std::string ruLanguage = "RU";
     std::string suhhLanguage = "SUHH";
     std::ifstream inputFile(file);
+    if(!inputFile) throw "File not opened";
 
     while (getline(inputFile, localizedTitles)) {
 
@@ -58,6 +59,7 @@ void NamesOfTitles::SortRuTitlesAndSearchNoRuTitles(const std::string &file, std
 void NamesOfTitles::InputLocalizedNames(const std::string &file, std::vector<std::string> &ruLocalizedTitles, std::vector<std::string> &noRuLocalizedTitles) {
     std::string localizedTitles;
     std::ifstream inputFile(file);
+    if(!inputFile) throw "File not opened";
 
     while (getline(inputFile, localizedTitles)) {
 

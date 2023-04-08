@@ -25,8 +25,9 @@ Split(const std::string &str, char separator) {
 }
 
 
-void ActorTitles::InputInformationAboutActor(const std::string &file) {//Находим в каких произведениях был актёр
+void ActorTitles::InputInformationAboutActor(const std::string &file) {
     std::ifstream inputFile(file);
+    if(!inputFile) throw "File not opened";
     std::string informationAboutActor;
 
     while (getline(inputFile, informationAboutActor)) {

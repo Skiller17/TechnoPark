@@ -6,7 +6,6 @@
 int main(int argc, char *argv[]) {
     if (argc != 5) {
         std::cerr << "Usage: " << argv[0] << " <name> <file1> <file2> <file3>";
-        return 1;
     }
 
     ActorTitles actorTitles;

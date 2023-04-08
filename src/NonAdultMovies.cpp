@@ -7,6 +7,7 @@
 void NonAdultMovies::InputInformationAboutTitles(const std::string &file) {
     std::string informationAboutTitle;
     std::ifstream inputFile(file);
+    if (!inputFile) throw "File not opened";
 
     while (getline(inputFile, informationAboutTitle)) {
         SearchNonAdultMovies(informationAboutTitle);

@@ -19,7 +19,6 @@ public:
     void OutputNoRuNames();
 
     std::vector<std::string> nonAdultMovie{};
-private:
     std::vector<std::string> ruTitlesNames{};
     std::vector<std::string> noRuTitlesNames{};
 };
