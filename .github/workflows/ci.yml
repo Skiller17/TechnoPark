@@ -86,11 +86,7 @@ jobs:
         run: cmake --build ./build
 
       - name: run-tests
-        run: /
-         ls
-         cd ${{ github.workflow }}/tests/unit_tests
-         chmod +x Tests
-         ./Tests
+        run: ./build/tests/unit_tests/test
 
       - name: get-stats
         run: lcov -t "tests" -o coverage.info -c -d . && genhtml -o report coverage.info
