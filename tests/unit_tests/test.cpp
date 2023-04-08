@@ -70,6 +70,7 @@ TEST(TestNamesOfTitles, SuccessSearchRuTitlesNames) {
     NamesOfTitles namesOfTitles;
 
     namesOfTitles.SearchRuTitlesNames(testLocalizedTitles, testRuLocalizedTitles);
+
     EXPECT_EQ(namesOfTitles.ruTitlesNames, testRuTitlesNames);
 }
 
@@ -81,6 +82,7 @@ TEST(TestNamesOfTitles, NoFindRuTitlesNames) {
     NamesOfTitles namesOfTitles;
 
     namesOfTitles.SearchRuTitlesNames(testLocalizedTitles, testRuLocalizedTitles);
+
     EXPECT_EQ(namesOfTitles.ruTitlesNames, testRuTitlesNames);
 }
 
@@ -92,6 +94,7 @@ TEST(TestNamesOfTitles, SuccessSearchNoRuTitlesNames) {
     NamesOfTitles namesOfTitles;
 
     namesOfTitles.SearchNoRuTitlesNames(testLocalizedTitles, testNoRuLocalizedTitles);
+
     EXPECT_EQ(namesOfTitles.noRuTitlesNames, testNoRuTitlesNames);
 }
 
@@ -103,5 +106,6 @@ TEST(TestNamesOfTitles, NoFindNoRuTitlesNames) {
     NamesOfTitles namesOfTitles;
 
     namesOfTitles.SearchNoRuTitlesNames(testLocalizedTitles, testNoRuLocalizedTitles);
+
     EXPECT_EQ(namesOfTitles.noRuTitlesNames, testNoRuTitlesNames);
 }
