@@ -55,7 +55,7 @@ jobs:
           style: file
           files-changed-only: false
   build:
-    needs: [ cppcheck-test, cpplint, cpp-linter, clang-tidy ]
+    needs: [ cppcheck-test, cpp-linter, clang-tidy ]
 
     runs-on: ubuntu-latest
 
