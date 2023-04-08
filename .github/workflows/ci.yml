@@ -8,7 +8,6 @@ on:
       BUILD_TYPE: Debug
 
   jobs:
-
     cppcheck-test:
       runs-on: ubuntu-latest
 
@@ -17,7 +16,6 @@ on:
 
         - name: cppcheck
           uses: deep5050/cppcheck-action@main
-
 
     cpplint:
       runs-on: ubuntu-latest
