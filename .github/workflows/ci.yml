@@ -73,7 +73,7 @@ jobs:
         run: cmake --build ./build
 
       - name: run-tests
-        run: ./tests/unit_tests/test
+        run: tests/unit_tests/test
 
       - name: get-stats
         run: lcov -t "tests" -o coverage.info -c -d . && genhtml -o report coverage.info
