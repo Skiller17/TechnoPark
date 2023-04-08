@@ -7,73 +7,73 @@ on:
     env:
       BUILD_TYPE: Debug
 
-  jobs:
-    cppcheck-test:
-      runs-on: ubuntu-latest
+jobs:
+  cppcheck-test:
+    runs-on: ubuntu-latest
 
-      steps:
-        - uses: actions/checkout@v3
+    steps:
+      - uses: actions/checkout@v3
 
-        - name: cppcheck
-          uses: deep5050/cppcheck-action@main
+      - name: cppcheck
+        uses: deep5050/cppcheck-action@main
 
-    cpplint:
-      runs-on: ubuntu-latest
+  cpplint:
+    runs-on: ubuntu-latest
 
-      steps:
-        - uses: actions/checkout@v3
+    steps:
+      - uses: actions/checkout@v3
 
-        - uses: actions/setup-python@v4
-          with:
-            python-version: 3.x
-        - run: pip install cpplint
-        - run: cpplint --recursive .
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+      - run: pip install cpplint
+      - run: cpplint --recursive .
 
-    cpp-linter:
-      runs-on: ubuntu-latest
+  cpp-linter:
+    runs-on: ubuntu-latest
 
-      steps:
-        - uses: actions/checkout@v3
+    steps:
+      - uses: actions/checkout@v3
 
-        - uses: cpp-linter/cpp-linter-action@main
-          id: linter
-          continue-on-error: true
-          with:
-            style: file
-            files-changed-only: false
-    build:
-      needs: [ cppcheck, cpplint, cpp-linter ]
+      - uses: cpp-linter/cpp-linter-action@main
+        id: linter
+        continue-on-error: true
+        with:
+          style: file
+          files-changed-only: false
+  build:
+    needs: [ cppcheck, cpplint, cpp-linter ]
 
-      runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
 
-      steps:
-        - uses: actions/checkout@v3
+    steps:
+      - uses: actions/checkout@v3
 
-        - name: build
-          run: cmake -B ./build
+      - name: build
+        run: cmake -B ./build
 
-        - name: upload-artifacts
-          uses: actions/upload-artifact@v3
-          with:
-            name: my-artifact
-            path: .
+      - name: upload-artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: my-artifact
+          path: .
 
-    tests:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v3
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
 
-        - name: install gtest
-          run: sudo apt install libgtest-dev lcov
+      - name: install gtest
+        run: sudo apt install libgtest-dev lcov
 
-        - name: build
-          run: cmake -Dtest=true -B ./build
+      - name: build
+        run: cmake -Dtest=true -B ./build
 
-        - name: make
-          run: cmake --build ./build
+      - name: make
+        run: cmake --build ./build
 
-        - name: run-tests
-          run: ./build/tests/unit_tests/test
+      - name: run-tests
+        run: ./build/tests/unit_tests/test
 
-        - name: get-stats
-          run: lcov -t "tests" -o coverage.info -c -d . && genhtml -o report coverage.info
+      - name: get-stats
+        run: lcov -t "tests" -o coverage.info -c -d . && genhtml -o report coverage.info
