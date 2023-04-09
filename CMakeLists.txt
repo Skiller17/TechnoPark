@@ -20,6 +20,8 @@ if (test)
             gtest gtest_main
     )
 
-    ADD_LINK_OPTIONS(-coverage)
-    ADD_COMPILE_OPTIONS(-coverage)
+    SET(GCC_COVERAGE_COMPILE_FLAGS "-g -O0 -coverage -fprofile-arcs -ftest-coverage")
+    SET(GCC_COVERAGE_LINK_FLAGS    "-coverage -lgcov")
+    SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}" )
+    SET( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}" )
 endif ()
