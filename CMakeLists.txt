@@ -4,6 +4,8 @@ project(Project1)
 set(CMAKE_CXX_STANDARD 17)
 
 add_executable(Project1 src/main.cpp src/ActorTitles.cpp src/ActorTitles.h src/NamesOfTitles.cpp src/NamesOfTitles.h src/NonAdultMovies.cpp src/NonAdultMovies.h)
+
+if (Dtest)
 add_executable(Tests tests/unit_tests/test.cpp src/ActorTitles.cpp src/ActorTitles.h src/NonAdultMovies.cpp src/NonAdultMovies.h src/NamesOfTitles.cpp src/NamesOfTitles.h)
 
 find_package(GTest REQUIRED)
@@ -17,3 +19,4 @@ target_link_libraries(
         Tests PRIVATE
         gtest gtest_main
 )
+endif()
