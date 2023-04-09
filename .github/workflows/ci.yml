@@ -87,10 +87,9 @@ jobs:
 
       - name: run-tests
         run: |
-          cd ${{ github.workflow }}/build/Tests
-          ls
-          chmod +x test
-          ./test
+          cd ${{ github.workflow }}/build
+          chmod +x Tests
+          ./Tests
 
       - name: get-stats
         run: lcov -t "tests" -o coverage.info -c -d . && genhtml -o report coverage.info
