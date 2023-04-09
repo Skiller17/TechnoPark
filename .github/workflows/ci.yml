@@ -87,8 +87,8 @@ jobs:
 
       - name: run-tests
         run: |
-          cmake -DBUILD_TESTS-ON -B ${{ github.wokflow }}/build
-          cmake --build ${{ github.wokflow }}/build
+          cmake -DBUILD_TESTS-ON -B ${{ github.workflow }}/build
+          cmake --build ${{ github.workflow }}/build
 
       - name: get-stats
         run: lcov -t "tests" -o coverage.info -c -d . && genhtml -o report coverage.info
