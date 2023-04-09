@@ -87,7 +87,7 @@ jobs:
 
       - name: run-tests
         run: |
-          cd ./build/tests/unit_tests/
+          cd /build/tests/unit_tests/
           chmod +x test
           ./test
 
