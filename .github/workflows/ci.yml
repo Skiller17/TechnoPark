@@ -80,15 +80,16 @@ jobs:
         run: sudo apt install libgtest-dev lcov
 
       - name: build
-        run: cmake -Dtest=true -B ./build
+        run: cmake -Dtest=true -B ${{ github.workflow }}/build
 
       - name: make
-        run: cmake --build ./build
+        run: cmake --build ${{ github.workflow }}/build
 
       - name: run-tests
         run: |
-          cmake -DBUILD_TESTS-ON -B ${{ github.workflows }}/build
-          cmake --build ${{ github.workflows }}/build
+          cd ${{ github.workflow }}/build/tests/unit_tests/
+          chmod +x test
+          ./test
 
       - name: get-stats
         run: lcov -t "tests" -o coverage.info -c -d . && genhtml -o report coverage.info
