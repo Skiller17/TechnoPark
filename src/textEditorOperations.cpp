@@ -1,5 +1,12 @@
-#include <fstream>
 #include <iostream>
+#include <regex>
+
+
+std::string
+Replacer(const std::string &inputStr, const std::string &initialSubstring, const std::string &replacementSubstring) {
+    std::regex rx(initialSubstring.c_str());
+    return std::regex_replace(inputStr, rx, replacementSubstring);
+}
 
 class IOperation {
 public:
@@ -12,51 +19,39 @@ public:
 
 class CatOperation : public IOperation {
 public:
-    void ProcessLine(const std::string &str) {
-        file = str;
-
-        nextOperation->ProcessLine(file);
+    void ProcessLine(const std::string &str) override {
+        inputString = str;
+        nextOperation->ProcessLine(str);
     }
 
-    void HandleEndOfInput() {
-        std::ifstream inputFile(file);
-        std::string outputStrings;
-
-        while(getline(inputFile, outputStrings)) {
-            std::cout << outputStrings << std::endl;
-        }
+    void HandleEndOfInput() override {
+        std::cout << inputString << std::endl;
     }
 
-    void SetNextOperation(IOperation *nextOp) {
-        if (nextOp == nullptr) {
-            HandleEndOfInput();
-        }
+    void SetNextOperation(IOperation *nextOp) override {
         nextOperation = nextOp;
     }
 
 private:
     IOperation *nextOperation;
-    std::string output;
-    std::string &file;
+    std::string inputString;
 };
 
 class EchoOperation : public IOperation {
 public:
-    void ProcessLine(const std::string &str) {
+    void ProcessLine(const std::string &str) override {
         nextOperation->ProcessLine(str);
         output = str;
     }
 
-    void HandleEndOfInput() {
+    void HandleEndOfInput() override {
         std::cout << output << std::endl;
     }
 
-    void SetNextOperation(IOperation *nextOp) {
-        if(nextOp == nullptr) {
-            HandleEndOfInput();
-        }
+    void SetNextOperation(IOperation *nextOp) override {
         nextOperation = nextOp;
     }
+
 private:
     IOperation *nextOperation;
     std::string output;
@@ -64,9 +59,28 @@ private:
 
 class ReplaceOperation : public IOperation {
 public:
-    void ProcessLine(const std::string &str) {}
+    void ProcessLine(const std::string &str) override {
 
-    void HandleEndOfInput() {}
+        if (str.find(initialSubstring)) {
+            output = Replacer(str, initialSubstring, replacementSubstring);
+            nextOperation->ProcessLine(output);
+        } else {
+            output = str;
+            nextOperation->ProcessLine(str);
+        }
+    }
 
-    void SetNextOperation(IOperation *nextOp) {}
+    void HandleEndOfInput() override {
+        std::cout << output << std::endl;
+    }
+
+    void SetNextOperation(IOperation *nextOp) override {
+        nextOperation = nextOp;
+    }
+
+    std::string initialSubstring;
+    std::string replacementSubstring;
+private:
+    IOperation *nextOperation;
+    std::string output;
 };
