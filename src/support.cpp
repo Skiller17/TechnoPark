@@ -4,7 +4,7 @@
 
 std::vector<std::string> Split(const std::string &str, char separator) {
     std::vector<std::string> result{};
-    std::string curr = "";
+    std::string curr;
 
     for (int i = 0; i < str.length(); ++i) {
 
@@ -33,6 +33,7 @@ public:
 
     void CommandsAndNames(const std::string &str) {
         std::vector<std::string> command;
+        std::string replaceCommand = "replace";
         int nameCommand = 0;
         int inputCommand = 1;
 
@@ -40,127 +41,56 @@ public:
 
         commandName.push_back(command[nameCommand]);
 
-        commandInput.push_back(command[inputCommand]);
-    }
-
-    void OutputNames() {
-        for (int i = 0; i < commandName.size(); i++) {
-            std::cout << commandName[i] << std::endl;
+        if (command[nameCommand] == replaceCommand) {
+            commandInput.push_back(command[inputCommand] + " " + command[inputCommand + 1]);
+        } else {
+            commandInput.push_back(command[inputCommand]);
         }
+        ConveyorAlgorithm();
     }
 
-    void OutputInputs() {
-        for (int i = 0; i < commandInput.size(); i++) {
-            std::cout << commandInput[i] << std::endl;
-        }
-    }
-
-    void ConveyorAlgorithm(const std::string &str) {
+    static IOperation *GetOperationFromName(std::string &operationName, std::string &arguments) {
         std::string echoCommand = "echo";
         std::string catCommand = "cat";
-        std::string replaceCommand = "replace";
 
+        if (operationName == echoCommand) {
+            auto *echoOperation = new EchoOperation;
+
+            echoOperation->argument = arguments;
+            return echoOperation;
+        } else if (operationName == catCommand) {
+            auto *catOperation =  new CatOperation;
+
+            catOperation->fileName = arguments;
+            return catOperation;
+        } else {
+            auto *replaceOperation = new ReplaceOperation;
+            std::vector<std::string> replaceStrings;
+
+            replaceStrings = Split(arguments, ' ');
+            replaceOperation->initialSubstring = replaceStrings[0];
+            replaceOperation->replacementSubstring = replaceStrings[1];
+            return replaceOperation;
+        }
+    }
+
+    void ConveyorAlgorithm() {
+        int startCommand = 0;
+
+        IOperation *prevOperation = GetOperationFromName(commandName[startCommand], commandInput[startCommand]);
+        IOperation *firstOperation = prevOperation;
+
+        for (int i = 1; i < commandName.size(); i++) {
+            IOperation *iOperation = GetOperationFromName(commandName[i], commandInput[i]);
+            prevOperation->SetNextOperation(iOperation);
+            prevOperation = iOperation;
+        }
+
+        firstOperation->ProcessLine("");
     }
 
 private:
     std::vector<std::string> commands;
     std::vector<std::string> commandName;
     std::vector<std::string> commandInput;
-    int startCommand = 0;
-    int commandCounter = 0;
 };
-
-/////
-
-if(commandName[startCommand] == echo) {
-EchoCommand echoCommand;
-
-echoCommand.
-AccomplishmentEchoCommand(echoCommand, str
-);
-}
-
-else if(commandName[startCommand] == cat) {
-CatCommand catCommand;
-
-catCommand.
-AccomplishmentCatCommand(catCommand, str
-);
-}
-
-else if(commandName[startCommand] == replace) {
-ReplaceCommand replaceCommand;
-
-replaceCommand.
-AccomplishmentReplaceCommand(replaceCommand, str
-);
-}
-
-else std::cout << "Invalid input";
-
-void AccomplishmentEchoCommand(IOperation *ioperation, cosnt std::string &str) {
-
-    if (commandCounter < commandName.size()) {
-
-        if (commandName[commandCounter + 1] == echo) {
-            EchoCommand echo;
-            SetNextOpearation(echo);
-            ProcessLine(str);
-            AccomplishmentEchoCommand(echo, str);
-        } else if (commandName[commandCounter + 1] == cat) {
-            CatCommand cat;
-            SetNextOpearation(CatCommand
-            cat);
-            ProcessLine(str);
-            AccomplishmentCatCommand(cat, str);
-        } else if (commandName[commandCounter + 1] == replace) {
-            ReplaceCommand replace;
-            SetNextOpearation(ReplaceCommand
-            replace);
-            ProcessLine(str);
-            AccomplishmentReplaceCommand(replace, str);
-        }
-    } else {
-        SetNextOpearation(nullptr);
-        ProcessLine(str);
-        HandleOutput();
-    }
-}
-
-void AccomplishmentCatCommand(IOperation *ioperation, const std::string &str) {
-
-
-    if (commandCounter < commandName.size()) {
-
-        if (commandName[commandCounter + 1] == echo) {
-
-        } else if (commandName[commandCounter + 1] == cat) {
-
-        } else if (commandName[commandCounter + 1] == replace) {
-
-        }
-    }
-}
-
-void AccomplishmentReplaceCommand(IOperation *ioperation, const std::string &str) {
-
-
-    if (commandCounter < commandName.size()) {
-
-        if (commandName[commandCounter + 1] == echo) {
-
-        } else if (commandName[commandCounter + 1] == cat) {
-
-        } else if (commandName[commandCounter + 1] == replace) {
-
-        }
-    }
-}
-
-if(commandName[commandCounter] == cat) {
-
-    while(getline(dadsd, "file_1.txt")) {
-
-    }
-
-}

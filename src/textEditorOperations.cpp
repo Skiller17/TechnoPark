@@ -55,10 +55,10 @@ public:
         nextOperation = nextOp;
     }
 
+    std::string fileName;
 private:
     IOperation *nextOperation;
     std::string inputString;
-    std::string &fileName;
     std::string outputString;
 };
 
@@ -80,9 +80,9 @@ public:
         nextOperation = nextOp;
     }
 
+    std::string argument;
 private:
     IOperation *nextOperation;
-    std::string argument;
 };
 
 class ReplaceOperation : public IOperation {

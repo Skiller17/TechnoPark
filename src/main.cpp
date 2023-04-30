@@ -1,9 +1,7 @@
 #include <iostream>
 #include "support.cpp"
 
-int main() {
+int main(int argc, char *argv[]) {
     Conveyor conveyor;
-    conveyor.Parser("echo 1 | cat file_1.txt | cat file_2.txt");
-    conveyor.OutputNames();
-    conveyor.OutputInputs();
+    conveyor.Parser(argv[1]);
 }
