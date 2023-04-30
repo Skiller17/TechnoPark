@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <regex>
 
 
@@ -20,12 +21,34 @@ public:
 class CatOperation : public IOperation {
 public:
     void ProcessLine(const std::string &str) override {
+        std::string fileStrings;
+
         inputString = str;
-        nextOperation->ProcessLine(str);
+
+        fileStrings = FileOutput();
+
+        outputString = str + '\n' + fileStrings;
+
+        if (nextOperation == nullptr) {
+            HandleEndOfInput();
+        } else {
+            nextOperation->ProcessLine(outputString);
+        }
+    }
+
+    std::string FileOutput() {
+        std::string str;
+        std::string glueStr = "";
+        std::ifstream inputFile(fileName);
+
+        while (getline(inputFile, str)) {
+            glueStr = glueStr + '\n' + str;
+        }
+        return glueStr;
     }
 
     void HandleEndOfInput() override {
-        std::cout << inputString << std::endl;
+        std::cout << outputString << std::endl;
     }
 
     void SetNextOperation(IOperation *nextOp) override {
@@ -35,17 +58,22 @@ public:
 private:
     IOperation *nextOperation;
     std::string inputString;
+    std::string &fileName;
+    std::string outputString;
 };
 
 class EchoOperation : public IOperation {
 public:
     void ProcessLine(const std::string &str) override {
-        nextOperation->ProcessLine(str);
-        output = str;
+        if (nextOperation == nullptr) {
+            HandleEndOfInput();
+        } else {
+            nextOperation->ProcessLine(argument);
+        }
     }
 
     void HandleEndOfInput() override {
-        std::cout << output << std::endl;
+        std::cout << argument << std::endl;
     }
 
     void SetNextOperation(IOperation *nextOp) override {
@@ -54,7 +82,7 @@ public:
 
 private:
     IOperation *nextOperation;
-    std::string output;
+    std::string argument;
 };
 
 class ReplaceOperation : public IOperation {
@@ -63,10 +91,20 @@ public:
 
         if (str.find(initialSubstring)) {
             output = Replacer(str, initialSubstring, replacementSubstring);
-            nextOperation->ProcessLine(output);
+
+            if(nextOperation == nullptr) {
+                HandleEndOfInput();
+            } else {
+                nextOperation->ProcessLine(output);
+            }
         } else {
             output = str;
-            nextOperation->ProcessLine(str);
+
+            if(nextOperation == nullptr) {
+                HandleEndOfInput();
+            } else {
+                nextOperation->ProcessLine(str);
+            }
         }
     }
 

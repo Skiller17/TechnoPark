@@ -1,0 +1,94 @@
+name: ci
+
+on:
+  push:
+    branches: dz2-OOP-and-Smart-pointers
+
+    env:
+      BUILD_TYPE: Debug
+
+jobs:
+  cppcheck-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: cppcheck
+        uses: deep5050/cppcheck-action@main
+
+  #  cpplint:
+  #    runs-on: ubuntu-latest
+  #
+  #    steps:
+  #      - uses: actions/checkout@v3
+  #
+  #      - uses: actions/setup-python@v4
+  #        with:
+  #          python-version: 3.x
+  #      - run: pip install cpplint
+  #      - run: cpplint --recursive .
+
+  clang-tidy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: run clang-tidy
+        uses: cpp-linter/cpp-linter-action@v2.4.2
+        with:
+          style: file
+          extra-args: -std=c++17
+
+  cpp-linter:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: cpp-linter/cpp-linter-action@main
+        id: linter
+        continue-on-error: true
+        with:
+          style: file
+          files-changed-only: false
+  build:
+    needs: [ cppcheck-test, cpp-linter, clang-tidy ]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: build
+        run: cmake -B ./build
+
+      - name: upload-artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: my-artifact
+          path: .
+
+#  tests:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v3
+#
+#      - name: install gtest
+#        run: sudo apt install libgtest-dev lcov
+#
+#      - name: build
+#        run: cmake -Dtest=true -B ${{ github.workflow }}/build
+#
+#      - name: make
+#        run: cmake --build ${{ github.workflow }}/build
+#
+#      - name: run-tests
+#        run: |
+#          cd ${{ github.workflow }}/build
+#          chmod +x Tests
+#          ./Tests
+#      - name: get-stats
+#        run: lcov -t "tests" -o coverage.info -c -d . && genhtml -o report coverage.info

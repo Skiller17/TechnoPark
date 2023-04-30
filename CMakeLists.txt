@@ -3,7 +3,7 @@ project(DZ2)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(DZ2 src/main.cpp src/textEditorOperations.cpp src/support.cpp)
+add_executable(DZ2 src/main.cpp)
 
 if (test)
     add_executable(Tests tests/unit_tests/tests.cpp)
